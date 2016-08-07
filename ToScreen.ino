@@ -226,11 +226,11 @@ void DataAquariedPreview() {
     tempsZero=((&block.data[0])->time);
     for (uint16_t i = 0; i < block.count; i++) { // Lecture de la valeur suivante
       
-//      for (uint16_t j = 0; j < 127; j++){ //décalage de toute les valeurs du tableau vers la gauche
-//        dataToScreen[j]=dataToScreen[j+1];
-//      }
-//      dataToScreen[128]=((&block.data[i])->adc[VoieAafficher]);// On met la valeur suisvante dans la derniere position du tableau
-//      
+      for (uint16_t j = 0; j < 127; j++){ //décalage de toute les valeurs du tableau vers la gauche
+        dataToScreen[j]=dataToScreen[j+1];
+      }
+      dataToScreen[127]=((&block.data[i])->adc[VoieAafficher]);// On met la valeur suisvante dans la derniere position du tableau
+      
       Temps=(((&block.data[i])->time)-tempsZero);
       
       AfficheGraph(dataToScreen,Temps);
@@ -242,7 +242,9 @@ void AfficheGraph(int dataToScreen[],int temps){
   display.setTextColor(WHITE);
 
   display.print(temps/1000);
-  //display.drawPixel(LesTempsEnX[i]*120/TempsMax, (60-(LesVitesseEnY[i]-VitesseMin)*60/(float)(VitesseMax-VitesseMin)), WHITE);
+  for (uint16_t j = 0; j < 128; j++){ 
+    display.drawPixel(j, dataToScreen[j]*64/4096, WHITE);
+  }
   
   display.setCursor(0,0);
   display.drawLine(0, 32, 128, 32, WHITE);
